@@ -1,1 +1,4 @@
-export { fetchCharacters as doFetchCharactersAction } from "./characters";
+export {
+  fetchCharacters as doFetchCharactersAction,
+  setItem as doSetItemAction
+} from "./characters";

@@ -1,51 +1,48 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { doFetchCharactersAction, doSetItemAction } from "../../../store";
+import { doPostCharacterNoteAction } from "../../../store";
 
 import { Actions } from "react-native-router-flux";
 
-import { View, ActivityIndicator } from "react-native";
-import ListView from "./view";
+import { TouchableOpacity, View, Text, ActivityIndicator } from "react-native";
+import FormView from "./view";
 import styles from "./styles";
 
-// Characters List Container:
+// Character Note Form Container:
 // 1. Handles REDUX stuff
-// 2. Fetches characters when mounted
-// 3. Handles the 'isFetching' stuff
-// 4. Renders the 'list' (through the ListView Component)
-// 5. Handles the 'data' pagination stuff
-// 6. Manages the 'onSelect' Event
+// 2. Renders the Note's FormView Component
 class Container extends Component {
   constructor(props) {
     super(props);
     this.state = Container.getDerivedStateFromProps(this.props, null);
   }
-  static getDerivedStateFromProps({ list, data, isFetching }) {
+  static getDerivedStateFromProps({ isFetching }) {
     return {
-      list,
-      data,
       isFetching
     };
   }
 
-  // Did Mount => Fetch Characters...
+  // Did Mount => Setup Right Button as Submit Button...
   componentDidMount() {
-    this.props.fetchCharacters();
+    setTimeout(() => {
+      Actions.refresh({
+        rightTitle: "OK",
+        rightButtonTextStyle: { color: "white", fontWeight: "bold" },
+        onRight: () => this._onSubmit()
+      });
+    }, 0);
   }
 
-  // On Select
-  onSelect(item) {
-    console.log("<CharactersViewContainer> onSelect: item=%o", item);
-    this.props.onItemSelected(item);
+  // On Submit
+  _onSubmit() {
+    this.props.onSubmitCharacterNote(this.props);
   }
 
   // Render View:
   render() {
-    const { list, data } = this.state;
-    console.log("<CharactersViewContainer> render: data=%o", data);
     return (
       <View style={styles.container}>
-        <ListView list={list} onSelect={item => this.onSelect(item)} />
+        <FormView />
         {this._renderActivityIndicator()}
       </View>
     );
@@ -53,7 +50,7 @@ class Container extends Component {
   _renderActivityIndicator() {
     const { isFetching } = this.state;
     console.log(
-      "<CharactersViewContainer> _renderActivityIndicator: isFetching=%o",
+      "<CharacterNoteFormContainer> _renderActivityIndicator: isFetching=%o",
       isFetching
     );
     if (!isFetching) {
@@ -80,8 +77,6 @@ class Container extends Component {
 // Map REDUX State to Component Properties:
 const mapStateToProps = state => {
   return {
-    list: state.characters.list,
-    data: state.characters.data,
     isFetching: state.characters.isFetching
   };
 };
@@ -89,12 +84,13 @@ const mapStateToProps = state => {
 // Map REDUX Actions to Component Properties:
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    fetchCharacters: () => {
-      dispatch(doFetchCharactersAction());
-    },
-    onItemSelected: item => {
-      dispatch(doSetItemAction(item));
-      Actions.characterDetail({ title: item.name });
+    onSubmitCharacterNote: props => {
+      //dispatch(doPostCharacterNoteAction(data));
+      console.log(
+        "<CharacterNoteFormContainer> onSubmitCharacterNote: props=%o",
+        props
+      );
+      Actions.pop();
     }
   };
 };

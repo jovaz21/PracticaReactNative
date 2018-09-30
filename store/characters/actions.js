@@ -18,7 +18,7 @@ function setList(value, data) {
 }
 
 // Set Item
-function setItem(value) {
+export function setItem(value) {
   return {
     type: types.CHARACTERS_SET_ITEM,
     value
@@ -42,14 +42,16 @@ export function fetchCharacters() {
           total: res.data.data.total
         };
         var list = res.data.data.results.map(item => {
+          var image =
+            item.thumbnail.path +
+            "/portrait_uncanny." +
+            item.thumbnail.extension;
+          if (image.indexOf("image_not_available") >= 0) image = null;
           return {
             id: item.id,
             name: item.name,
             description: item.description,
-            image:
-              item.thumbnail.path +
-              "/portrait_uncanny." +
-              item.thumbnail.extension
+            image: image
           };
         });
         dispatch(setList(list, data));

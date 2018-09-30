@@ -13,7 +13,8 @@ export default function reducer(state = initialState, action = {}) {
     case types.CHARACTERS_UPDATE_LIST:
       return {
         ...state,
-        list: action.value
+        list: action.value,
+        data: typeof action.data !== "undefined" ? action.data : state.data
       };
 
     case types.CHARACTERS_SET_ITEM:

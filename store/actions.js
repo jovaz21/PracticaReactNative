@@ -1,1 +1,1 @@
-export { fetchCharacters } from "./characters";
+export { fetchCharacters as doFetchCharactersAction } from "./characters";

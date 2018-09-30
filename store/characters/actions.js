@@ -9,10 +9,11 @@ function setFetching(value) {
 }
 
 // Set List
-function setList(value) {
+function setList(value, data) {
   return {
     type: types.CHARACTERS_UPDATE_LIST,
-    value
+    value,
+    data
   };
 }
 
@@ -26,6 +27,7 @@ function setItem(value) {
 
 // Fetch Characters
 export function fetchCharacters() {
+  // Async Thunk Action
   return (dispatch, getState, api) => {
     dispatch(setList([]));
     dispatch(setFetching(true));
@@ -33,8 +35,24 @@ export function fetchCharacters() {
       .fetchCharacters()
       .then(res => {
         dispatch(setFetching(false));
-        console.log("<CharactersActions> fetchCharacters: res=%o", res);
-        dispatch(setList(res.data.records));
+        var data = {
+          count: res.data.data.count,
+          limit: res.data.data.limit,
+          offset: res.data.data.offset,
+          total: res.data.data.total
+        };
+        var list = res.data.data.results.map(item => {
+          return {
+            id: item.id,
+            name: item.name,
+            description: item.description,
+            image:
+              item.thumbnail.path +
+              "/portrait_uncanny." +
+              item.thumbnail.extension
+          };
+        });
+        dispatch(setList(list, data));
       })
       .catch(err => {
         dispatch(setFetching(false));

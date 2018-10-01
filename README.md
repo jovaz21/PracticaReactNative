@@ -8,7 +8,6 @@ Marvel Heroes es una app para Android que lista algunos de los súperheroes de M
 - REDUX + Middleware Thunk
 - Router Flux
 - Axios (Acceso a la API de Marvel.com)
-- Retrofit (DataSource Remoto)
 
 ## IMPORTANTE 📝
 

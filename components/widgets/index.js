@@ -1,3 +1,4 @@
 import CharacterCell from "./characterCell/";
+import TextInput from "./textInput/";
 
-export { CharacterCell };
+export { CharacterCell, TextInput };

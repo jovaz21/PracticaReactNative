@@ -4,7 +4,7 @@ import { doPostCharacterNoteAction } from "../../../store";
 
 import { Actions } from "react-native-router-flux";
 
-import { TouchableOpacity, View, Text, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import FormView from "./view";
 import styles from "./styles";
 
@@ -22,27 +22,16 @@ class Container extends Component {
     };
   }
 
-  // Did Mount => Setup Right Button as Submit Button...
-  componentDidMount() {
-    setTimeout(() => {
-      Actions.refresh({
-        rightTitle: "OK",
-        rightButtonTextStyle: { color: "white", fontWeight: "bold" },
-        onRight: () => this._onSubmit()
-      });
-    }, 0);
-  }
-
   // On Submit
-  _onSubmit() {
-    this.props.onSubmitCharacterNote(this.props);
+  _onSubmit(data) {
+    this.props.onSubmitCharacterNote(data);
   }
 
   // Render View:
   render() {
     return (
       <View style={styles.container}>
-        <FormView />
+        <FormView onSubmit={data => this._onSubmit(data)} />
         {this._renderActivityIndicator()}
       </View>
     );
@@ -84,11 +73,11 @@ const mapStateToProps = state => {
 // Map REDUX Actions to Component Properties:
 const mapDispatchToProps = (dispatch, props) => {
   return {
-    onSubmitCharacterNote: props => {
+    onSubmitCharacterNote: data => {
       //dispatch(doPostCharacterNoteAction(data));
       console.log(
-        "<CharacterNoteFormContainer> onSubmitCharacterNote: props=%o",
-        props
+        "<CharacterNoteFormContainer> onSubmitCharacterNote: data=%o",
+        data
       );
       Actions.pop();
     }

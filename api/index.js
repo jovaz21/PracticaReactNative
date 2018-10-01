@@ -1,5 +1,6 @@
 import axios from "axios";
 import * as Config from "../App/config";
+import { md5 } from "../utils";
 
 // TMBD Base URL
 const BASE_URL = "http://gateway.marvel.com";
@@ -14,12 +15,16 @@ export function setup() {
 
 // Fetch Characters
 export function fetchCharacters() {
+  const now = Date.now();
+  const hashValue = md5.calculate(
+    now + Config.TMDB_API_PRIVATE_KEY + Config.TMDB_API_PUBLIC_KEY
+  );
   const url =
     "/v1/public/characters?ts=" +
-    Config.TMDB_API_TS_VALUE +
+    now +
     "&apikey=" +
     Config.TMDB_API_PUBLIC_KEY +
     "&hash=" +
-    Config.TMDB_API_HASH_VALUE;
+    hashValue;
   return axios.get(url);
 }
